@@ -3,6 +3,9 @@ package com.example.blog.blogappapis.Payloads;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import javax.validation.constraints.*;
 
 @NoArgsConstructor
 @Setter
@@ -10,8 +13,20 @@ import lombok.Setter;
 public class UserDto {
 
     private Long id;
+
+    @NotNull(message = "Please enter your name")
+    @Size(min = 3, message = "Name must have 3 characters")
     private String name;
+
+    @Email(message = "Email should be a valid email")
+    @UniqueElements
     private String email;
+
+    @NotNull
+    @Size(min = 8, message = "Password must contain minimum of 8 characters")
     private String password;
+
+    @NotNull
+    @Size(min = 4, message = "About must have characters more that 4")
     private String about;
 }
