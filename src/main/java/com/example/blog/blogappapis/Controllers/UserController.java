@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -19,7 +19,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @PostMapping("/saveUser")
-    public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> saveUser(@Valid @RequestBody UserDto userDto){
         UserDto createdUser = userService.saveUser(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
