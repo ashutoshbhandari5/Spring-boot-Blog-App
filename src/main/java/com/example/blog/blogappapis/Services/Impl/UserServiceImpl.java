@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,30 +33,34 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long userId) {
         Optional<User> user = userRepo.findById(userId);
         if(user.isEmpty()){
-             throw new ResourceNotFoundException("User", "Id", userId);
+             throw new ResourceNotFoundException(String.format("User Id with %o not found in User", userId));
         }
         return userToUserDto(user.get());
     }
 
     @Override
     public void deleteUser(Long userId) {
-
+        Optional<User> user = userRepo.findById(userId);
+        if(user.isEmpty()){
+            throw new ResourceNotFoundException(String.format("User Id with %o not found in User", userId));
+        }
+        userRepo.deleteById(userId);
     }
 
     @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
       Optional<User> user = userRepo.findById(userId);
       if(user.isEmpty()){
-          throw new ResourceNotFoundException("User", "Id", userId);
+          throw new ResourceNotFoundException(String.format("User Id with %o not found in User", userId));
       }
       if (Objects.nonNull(userDto.getName()) && !"".equalsIgnoreCase(userDto.getName())) {
           user.get().setName(userDto.getName());
       }
       if (Objects.nonNull(userDto.getAbout()) && !"".equalsIgnoreCase(userDto.getAbout())) {
-          user.get().setName(userDto.getAbout());
+          user.get().setAbout(userDto.getAbout());
       }
       if (Objects.nonNull(userDto.getEmail()) && !"".equalsIgnoreCase(userDto.getEmail())) {
-          user.get().setName(userDto.getEmail());
+          user.get().setEmail(userDto.getEmail());
       }
       userRepo.save(user.get());
 
@@ -64,7 +69,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return null;
+        List<User> users= userRepo.findAll();
+       return users.stream().map(this::userToUserDto).toList();
     }
 
     private User userDtoToUser (UserDto userDto){
