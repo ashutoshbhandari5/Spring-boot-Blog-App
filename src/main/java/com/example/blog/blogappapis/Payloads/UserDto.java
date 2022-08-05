@@ -19,11 +19,10 @@ public class UserDto {
     private String name;
 
     @Email(message = "Email should be a valid email")
-    @UniqueElements
     private String email;
 
     @NotNull
-    @Size(min = 8, message = "Password must contain minimum of 8 characters")
+    @Size(min = 8, max = 15, message = "Password must contain characters between 8 - 15")
     private String password;
 
     @NotNull
