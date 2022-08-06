@@ -5,7 +5,7 @@ import com.example.blog.blogappapis.Exceptions.ResourceNotFoundException;
 import com.example.blog.blogappapis.Payloads.UserDto;
 import com.example.blog.blogappapis.Repositories.UserRepo;
 import com.example.blog.blogappapis.Services.UserService;
-import org.modelmapper.ModelMapper;
+import com.example.blog.blogappapis.Utils.MapDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,12 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private MapDto mapDto;
 
     @Override
     public UserDto saveUser(UserDto userDto) {
-        User newUser = userRepo.save(userDtoToUser(userDto));
-        return userToUserDto(newUser);
+        User newUser = userRepo.save(mapDto.userDtoToUser(userDto));
+        return mapDto.userToUserDto(newUser);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         if(user.isEmpty()){
              throw new ResourceNotFoundException(String.format("User Id with %o not found in User", userId));
         }
-        return userToUserDto(user.get());
+        return mapDto.userToUserDto(user.get());
     }
 
     @Override
@@ -64,20 +64,12 @@ public class UserServiceImpl implements UserService {
       }
       userRepo.save(user.get());
 
-     return userToUserDto(user.get());
+     return mapDto.userToUserDto(user.get());
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users= userRepo.findAll();
-       return users.stream().map(this::userToUserDto).toList();
-    }
-
-    private User userDtoToUser (UserDto userDto){
-      return modelMapper.map(userDto, User.class);
-    }
-
-    private UserDto userToUserDto (User user){
-      return modelMapper.map(user, UserDto.class);
+       return users.stream().map(user -> mapDto.userToUserDto(user)).collect(Collectors.toList());
     }
 }
