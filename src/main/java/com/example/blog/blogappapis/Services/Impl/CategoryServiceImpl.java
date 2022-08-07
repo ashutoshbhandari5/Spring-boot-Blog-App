@@ -1,20 +1,28 @@
 package com.example.blog.blogappapis.Services.Impl;
 
+import com.example.blog.blogappapis.Entities.Category;
 import com.example.blog.blogappapis.Payloads.CategoryDto;
 import com.example.blog.blogappapis.Repositories.CategoryRepo;
 import com.example.blog.blogappapis.Services.CategoryService;
+import com.example.blog.blogappapis.Utils.MapDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepo categoryRepo;
 
+    @Autowired
+    MapDto mapDto;
+
     @Override
     public CategoryDto saveCategory(CategoryDto categoryDto) {
-        return null;
+      Category category = categoryRepo.save(mapDto.categoryDtoToCategory(categoryDto));
+      return mapDto.categoryToCategoryDto(category);
     }
 
     @Override
