@@ -1,6 +1,7 @@
 package com.example.blog.blogappapis.Controllers;
 
 import com.example.blog.blogappapis.Entities.Post;
+import com.example.blog.blogappapis.Payloads.ApiResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,36 @@ public class PostController {
         return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable("postId") Long postId){
+        PostDto postDto = postService.getPostById(postId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllPost")
+    public ResponseEntity<List<PostDto>> getAllPost(){
+        List<PostDto> postDtoList = postService.getAllPost();
+        return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deletePost/{postId}")
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable("postId") Long postId){
+        ApiResponse apiResponse = new ApiResponse("Post deleted successfully", true);
+        postService.deletePost(postId);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     //find all post made by user
     @GetMapping("/getUserPosts/{userId}")
     public ResponseEntity<List<PostDto>> getUserPosts(@PathVariable("userId") Long userId){
         List<PostDto> postDto = postService.getAllPostByUser(userId);
         return new ResponseEntity<>(postDto,HttpStatus.OK);
+    }
+
+    //find all post from specific category
+    @GetMapping("/getPostFromCategory/{categoryId}")
+    public ResponseEntity<List<PostDto>> getPostFromCategory(@PathVariable("categoryId") Long categoryId){
+        List<PostDto> postDtoList = postService.getAllPostByCategory(categoryId);
+        return new ResponseEntity<>(postDtoList, HttpStatus.OK);
     }
 }
