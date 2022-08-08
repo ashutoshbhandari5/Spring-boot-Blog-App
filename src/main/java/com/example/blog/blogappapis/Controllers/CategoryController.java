@@ -1,6 +1,4 @@
 package com.example.blog.blogappapis.Controllers;
-
-import com.example.blog.blogappapis.Entities.Category;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
 import com.example.blog.blogappapis.Payloads.CategoryDto;
 import com.example.blog.blogappapis.Services.Impl.CategoryServiceImpl;
