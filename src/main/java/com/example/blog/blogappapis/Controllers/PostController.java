@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/post")
 public class PostController {
@@ -15,9 +17,17 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    //save new post
     @PostMapping("/savePost/{userId}/{categoryId}")
     public ResponseEntity<PostDto> savePost(@PathVariable("userId") Long userId, @PathVariable("categoryId") Long categoryId, @RequestBody PostDto postDto){
         PostDto savedPostDto = postService.saveUser(postDto, userId, categoryId);
         return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
+    }
+
+    //find all post made by user
+    @GetMapping("/getUserPosts/{userId}")
+    public ResponseEntity<List<PostDto>> getUserPosts(@PathVariable("userId") Long userId){
+        List<PostDto> postDto = postService.getAllPostByUser(userId);
+        return new ResponseEntity<>(postDto,HttpStatus.OK);
     }
 }
