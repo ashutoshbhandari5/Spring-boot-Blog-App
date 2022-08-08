@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -51,36 +52,47 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto updatePost(Long postId, PostDto postDto) {
+        //can change category
+        //cannot change the user
+
         return null;
     }
 
     @Override
-    public PostDto deletePost(Long postId) {
-        return null;
+    public void deletePost(Long postId) {
+        Post post = postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException(String.format("Post with post id: %o not found",postId)));
+        postRepo.deleteById(postId);
     }
 
     @Override
     public PostDto getPostById(Long postId) {
-        return null;
+        Post post = postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException(String.format("Post with post id: %o not found",postId)));
+        return mapDto.postToPostDto(post);
     }
 
     @Override
-    public List<Post> getAllPost() {
-        return null;
+    public List<PostDto> getAllPost() {
+        List<Post> posts = postRepo.findAll();
+        return posts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Post> getAllPostByUser(Long userId) {
-        return null;
+    public List<PostDto> getAllPostByUser(Long userId) {
+        User foundUser = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(String.format("User not found with user id:  %o", userId)));
+        List<Post> posts = postRepo.findByUser(foundUser);
+
+        return posts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Post> getAllPostByCategory(Long categoryId) {
-        return null;
+    public List<PostDto> getAllPostByCategory(Long categoryId) {
+        Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(String.format("Category not found with category id:  %o", categoryId)));
+        List<Post> posts = postRepo.findByCategory(category);
+        return posts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Post> searchPost(String keyword) {
+    public List<PostDto> searchPost(String keyword) {
         return null;
     }
 }
