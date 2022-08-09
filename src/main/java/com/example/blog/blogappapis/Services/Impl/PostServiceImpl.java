@@ -5,6 +5,7 @@ import com.example.blog.blogappapis.Entities.Post;
 import com.example.blog.blogappapis.Entities.User;
 import com.example.blog.blogappapis.Exceptions.ResourceNotFoundException;
 import com.example.blog.blogappapis.Payloads.CategoryDto;
+import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Repositories.CategoryRepo;
 import com.example.blog.blogappapis.Repositories.PostRepo;
@@ -89,10 +90,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost(int pageNumber, int pageSize) {
+    public PageablePostResponse getAllPost(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        List<Post> posts = postRepo.findAll(pageable).getContent();
-        return posts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
+        Page<Post> posts = postRepo.findAll(pageable);
+
+        List<Post> postList = posts.getContent();
+        List<PostDto> postDto = posts.stream().map(post -> mapDto.postToPostDto(post)).toList();
+
+        PageablePostResponse pageablePostResponse = new PageablePostResponse();
+        pageablePostResponse.setLastPage(posts.isLast());
+        pageablePostResponse.setPageSize(posts.getSize());
+        pageablePostResponse.setTotalPage(posts.getTotalPages());
+        pageablePostResponse.setContent(postDto);
+        pageablePostResponse.setTotalElements(posts.getTotalElements());
+        pageablePostResponse.setPageNumber(posts.getNumber());
+        return pageablePostResponse;
     }
 
     @Override

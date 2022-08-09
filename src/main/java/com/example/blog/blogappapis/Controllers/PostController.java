@@ -1,6 +1,7 @@
 package com.example.blog.blogappapis.Controllers;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
 import com.example.blog.blogappapis.Payloads.ListApiResponse;
+import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,9 @@ public class PostController {
     }
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<ListApiResponse<List<PostDto>>> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
-        List<PostDto> postDtoList = postService.getAllPost(pageNumber, pageSize);
-        ListApiResponse<List<PostDto>> listApiResponse = new ListApiResponse<List<PostDto>>(postDtoList.size(),true, postDtoList);
-        return new ResponseEntity<>(listApiResponse, HttpStatus.OK);
+    public ResponseEntity<PageablePostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+        PageablePostResponse postDto = postService.getAllPost(pageNumber, pageSize);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/deletePost/{postId}")
