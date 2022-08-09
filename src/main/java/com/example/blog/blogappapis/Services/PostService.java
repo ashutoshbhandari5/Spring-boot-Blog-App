@@ -20,7 +20,7 @@ public interface PostService {
     public PostDto getPostById(Long postId);
 
     //get All Post
-    public List<PostDto> getAllPost();
+    public List<PostDto> getAllPost(int pageNumber, int pageSize);
 
     //getAllPostByUser
     public List<PostDto> getAllPostByUser(Long userId);

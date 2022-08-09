@@ -4,6 +4,7 @@ import com.example.blog.blogappapis.Entities.Category;
 import com.example.blog.blogappapis.Entities.Post;
 import com.example.blog.blogappapis.Entities.User;
 import com.example.blog.blogappapis.Exceptions.ResourceNotFoundException;
+import com.example.blog.blogappapis.Payloads.CategoryDto;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Repositories.CategoryRepo;
 import com.example.blog.blogappapis.Repositories.PostRepo;
@@ -11,10 +12,14 @@ import com.example.blog.blogappapis.Repositories.UserRepo;
 import com.example.blog.blogappapis.Services.PostService;
 import com.example.blog.blogappapis.Utils.MapDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,10 +57,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto updatePost(Long postId, PostDto postDto) {
-        //can change category
-        //cannot change the user
+        Post post = postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException(String.format("Post with post id: %o not found",postId)));
 
-        return null;
+        if(Objects.nonNull(postDto.getContent()) && !"".equalsIgnoreCase(postDto.getContent())){
+            post.setContent(postDto.getContent());
+        }
+
+        if(Objects.nonNull(postDto.getTitle()) && !"".equalsIgnoreCase(postDto.getTitle())){
+            post.setTitle(postDto.getTitle());
+        }
+
+        if(Objects.nonNull(postDto.getImageName()) && !"".equalsIgnoreCase(postDto.getImageName())){
+            post.setImageName(postDto.getImageName());
+        }
+
+        postRepo.save(post);
+
+        return mapDto.postToPostDto(post);
     }
 
     @Override
@@ -71,8 +89,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost() {
-        List<Post> posts = postRepo.findAll();
+    public List<PostDto> getAllPost(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        List<Post> posts = postRepo.findAll(pageable).getContent();
         return posts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 
