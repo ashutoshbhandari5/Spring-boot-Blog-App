@@ -1,6 +1,7 @@
 package com.example.blog.blogappapis.Services;
 import com.example.blog.blogappapis.Entities.Post;
 import com.example.blog.blogappapis.Payloads.CategoryDto;
+import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Payloads.UserDto;
 
@@ -20,7 +21,7 @@ public interface PostService {
     public PostDto getPostById(Long postId);
 
     //get All Post
-    public List<PostDto> getAllPost(int pageNumber, int pageSize);
+    public PageablePostResponse getAllPost(int pageNumber, int pageSize);
 
     //getAllPostByUser
     public List<PostDto> getAllPostByUser(Long userId);
