@@ -37,8 +37,8 @@ public class PostController {
     }
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<ListApiResponse<List<PostDto>>> getAllPost(){
-        List<PostDto> postDtoList = postService.getAllPost();
+    public ResponseEntity<ListApiResponse<List<PostDto>>> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+        List<PostDto> postDtoList = postService.getAllPost(pageNumber, pageSize);
         ListApiResponse<List<PostDto>> listApiResponse = new ListApiResponse<List<PostDto>>(postDtoList.size(),true, postDtoList);
         return new ResponseEntity<>(listApiResponse, HttpStatus.OK);
     }
