@@ -14,6 +14,7 @@ public class PostDto {
 
     private String title;
     private String content;
+    private Long postId;
 
     private Date addedDate;
     private String imageName;

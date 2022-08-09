@@ -1,6 +1,4 @@
 package com.example.blog.blogappapis.Controllers;
-
-import com.example.blog.blogappapis.Entities.Post;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
@@ -10,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/post")
@@ -23,6 +22,12 @@ public class PostController {
     public ResponseEntity<PostDto> savePost(@PathVariable("userId") Long userId, @PathVariable("categoryId") Long categoryId, @RequestBody PostDto postDto){
         PostDto savedPostDto = postService.saveUser(postDto, userId, categoryId);
         return new ResponseEntity<>(savedPostDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/updatePost/{postId}")
+    public ResponseEntity<PostDto> updatePost(@PathVariable("postId") Long postId, @RequestBody PostDto postDto){
+        PostDto updatedPostDto = postService.updatePost(postId, postDto);
+        return new ResponseEntity<>(updatedPostDto, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
