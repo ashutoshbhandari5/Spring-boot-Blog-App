@@ -1,5 +1,6 @@
 package com.example.blog.blogappapis.Controllers;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
+import com.example.blog.blogappapis.Payloads.ListApiResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/post")
@@ -37,9 +37,10 @@ public class PostController {
     }
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<List<PostDto>> getAllPost(){
+    public ResponseEntity<ListApiResponse<List<PostDto>>> getAllPost(){
         List<PostDto> postDtoList = postService.getAllPost();
-        return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+        ListApiResponse<List<PostDto>> listApiResponse = new ListApiResponse<List<PostDto>>(postDtoList.size(),true, postDtoList);
+        return new ResponseEntity<>(listApiResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/deletePost/{postId}")
