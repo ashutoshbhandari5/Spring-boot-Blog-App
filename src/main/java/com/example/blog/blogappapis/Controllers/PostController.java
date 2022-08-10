@@ -1,5 +1,6 @@
 package com.example.blog.blogappapis.Controllers;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
+import com.example.blog.blogappapis.Payloads.ListApiResponse;
 import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
@@ -65,5 +66,14 @@ public class PostController {
     public ResponseEntity<List<PostDto>> getPostFromCategory(@PathVariable("categoryId") Long categoryId){
         List<PostDto> postDtoList = postService.getAllPostByCategory(categoryId);
         return new ResponseEntity<>(postDtoList, HttpStatus.OK);
+    }
+
+    //search Post
+
+    @GetMapping("/searchPost/{keyword}")
+    public ResponseEntity<ListApiResponse<List<PostDto>>> searchPost(@PathVariable("keyword") String keyword){
+        List<PostDto> postDtoList = postService.searchPost(keyword);
+        ListApiResponse<List<PostDto>> listApiResponse = new ListApiResponse<>(postDtoList.size(),true,postDtoList);
+        return new ResponseEntity<>(listApiResponse,HttpStatus.OK);
     }
 }
