@@ -4,7 +4,6 @@ import com.example.blog.blogappapis.Entities.Category;
 import com.example.blog.blogappapis.Entities.Post;
 import com.example.blog.blogappapis.Entities.User;
 import com.example.blog.blogappapis.Exceptions.ResourceNotFoundException;
-import com.example.blog.blogappapis.Payloads.CategoryDto;
 import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Repositories.CategoryRepo;
@@ -19,10 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -126,6 +129,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> searchPost(String keyword) {
-        return null;
+        List<Post> postsFromTitle = postRepo.findByTitleContaining(keyword);
+        List<Post> postsFromContent = postRepo.findByTitleContaining(keyword);
+        List<Post> newList = Stream.concat(postsFromContent.stream(), postsFromTitle.stream()).toList();
+
+        List<Post> allPosts = newList.stream()
+                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Post::getPostId))),
+                        ArrayList::new));
+
+        return allPosts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 }
