@@ -21,7 +21,7 @@ public interface PostService {
     public PostDto getPostById(Long postId);
 
     //get All Post
-    public PageablePostResponse getAllPost(int pageNumber, int pageSize);
+    public PageablePostResponse getAllPost(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     //getAllPostByUser
     public List<PostDto> getAllPostByUser(Long userId);

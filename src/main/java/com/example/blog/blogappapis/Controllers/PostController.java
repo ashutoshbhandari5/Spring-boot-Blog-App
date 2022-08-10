@@ -1,6 +1,5 @@
 package com.example.blog.blogappapis.Controllers;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
-import com.example.blog.blogappapis.Payloads.ListApiResponse;
 import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
 import com.example.blog.blogappapis.Services.PostService;
@@ -38,8 +37,12 @@ public class PostController {
     }
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<PageablePostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber, @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
-        PageablePostResponse postDto = postService.getAllPost(pageNumber, pageSize);
+    public ResponseEntity<PageablePostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+                                                           @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+                                                           @RequestParam(value = "sortBy", required = false, defaultValue = "addedDate") String sortBy,
+                                                           @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir)
+    {
+        PageablePostResponse postDto = postService.getAllPost(pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
