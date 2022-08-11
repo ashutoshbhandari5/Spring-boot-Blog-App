@@ -1,9 +1,6 @@
 package com.example.blog.blogappapis.Services;
-import com.example.blog.blogappapis.Entities.Post;
-import com.example.blog.blogappapis.Payloads.CategoryDto;
 import com.example.blog.blogappapis.Payloads.PageablePostResponse;
 import com.example.blog.blogappapis.Payloads.PostDto;
-import com.example.blog.blogappapis.Payloads.UserDto;
 
 import java.util.List;
 
