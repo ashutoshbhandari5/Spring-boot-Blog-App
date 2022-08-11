@@ -129,14 +129,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> searchPost(String keyword) {
-        List<Post> postsFromTitle = postRepo.findByTitleContaining(keyword);
-        List<Post> postsFromContent = postRepo.findByTitleContaining(keyword);
-        List<Post> newList = Stream.concat(postsFromContent.stream(), postsFromTitle.stream()).toList();
+        List<Post> postList = postRepo.searchByTitle("%"+keyword+"%");
 
-        List<Post> allPosts = newList.stream()
-                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Post::getPostId))),
-                        ArrayList::new));
+        //Custom search implementation
 
-        return allPosts.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
+//        List<Post> postsFromContent = postRepo.findByTitleContaining(keyword);
+//        List<Post> newList = Stream.concat(postsFromContent.stream(), postsFromTitle.stream()).toList();
+//
+//        List<Post> allPosts = newList.stream()
+//                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(Post::getPostId))),
+//                        ArrayList::new));
+
+        return postList.stream().map(post -> mapDto.postToPostDto(post)).collect(Collectors.toList());
     }
 }

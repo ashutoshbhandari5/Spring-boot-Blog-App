@@ -1,4 +1,5 @@
 package com.example.blog.blogappapis.Controllers;
+import com.example.blog.blogappapis.Config.AppConstants;
 import com.example.blog.blogappapis.Payloads.ApiResponse;
 import com.example.blog.blogappapis.Payloads.ListApiResponse;
 import com.example.blog.blogappapis.Payloads.PageablePostResponse;
@@ -38,10 +39,10 @@ public class PostController {
     }
 
     @GetMapping("/getAllPost")
-    public ResponseEntity<PageablePostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-                                                           @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                           @RequestParam(value = "sortBy", required = false, defaultValue = "addedDate") String sortBy,
-                                                           @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir)
+    public ResponseEntity<PageablePostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) int pageNumber,
+                                                           @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) int pageSize,
+                                                           @RequestParam(value = "sortBy", required = false, defaultValue = AppConstants.SORT_BY) String sortBy,
+                                                           @RequestParam(value = "sortDir", required = false, defaultValue = AppConstants.SORT_DIR) String sortDir)
     {
         PageablePostResponse postDto = postService.getAllPost(pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(postDto, HttpStatus.OK);
