@@ -20,12 +20,10 @@ public class FileServiceImpl implements FileService {
 
         //full file path
         final String substring = fileName.substring(fileName.length() - 4);
-        if( !file.isEmpty() && !" ".equalsIgnoreCase(fileName) && fileName.length() > 5 && !substring.equals(".png")){
+        if( !file.isEmpty() && !" ".equalsIgnoreCase(fileName) && fileName.length() > 5){
             String randomId = UUID.randomUUID().toString().concat(substring);
 
-            String filePath = path+randomId;
-
-            System.out.println(filePath);
+            String filePath = path+ File.separator +randomId;
 
             //Check if the file exists
             File f = new File(path);
